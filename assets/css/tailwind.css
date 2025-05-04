@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply min-h-screen bg-gradient-to-b from-white to-indigo-50;
+}
+
+#__nuxt {
+    @apply w-full h-screen flex justify-center;
+}
