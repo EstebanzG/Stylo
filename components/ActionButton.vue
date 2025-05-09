@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  isPrimary ?: boolean
+  color ?: "blue" | "white"
   disabled ?: boolean
 }>()
 
@@ -11,9 +11,11 @@ const emit = defineEmits<{
 
 <template>
   <button :class="{
-    'px-4 py-2 rounded-xl w-full text-2xl flex items-center justify-center gap-2 shadow': true,
-    'bg-blue-700 text-white': isPrimary,
-    'bg-white': !isPrimary,
+    'px-4 py-2 rounded-xl flex items-center justify-center gap-2': true,
+    'bg-blue-500 hover:bg-blue-600 text-white': color === 'blue',
+    'bg-white border hover:bg-slate-100': color === 'white',
+    'transition-all duration-150 active:scale-95': !disabled,
+    'opacity-50 cursor-not-allowed': disabled
   }" @click="emit('click')" :disabled="disabled">
     <slot />
   </button>

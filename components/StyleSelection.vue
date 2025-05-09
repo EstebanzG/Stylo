@@ -20,13 +20,13 @@ defineEmits<{
       <option>Classic European</option>
     </select>
     <div class="flex justify-end">
-      <button
-          class="px-4 py-2 bg-blue-500 text-white rounded-xl"
+      <action-button
+          color="blue"
           :disabled="!style"
           @click="$emit('nextStep')"
       >
         Next
-      </button>
+      </action-button>
     </div>
   </div>
 </template>

@@ -11,7 +11,7 @@ defineEmits<{
   setStep: [step: number]
 }>()
 
-const stepTitles = ['Photo', 'Style', 'Contraintes', 'Récapitulatif']
+const stepTitles = ['Photo', 'Style', 'Constraints']
 </script>
 
 <template>

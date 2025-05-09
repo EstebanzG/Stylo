@@ -4,14 +4,14 @@ import ImageUploader from "~/components/ImageUploader.vue";
 import FormStepper from "~/components/FormStepper.vue";
 import StyleSelection from "~/components/StyleSelection.vue";
 import ConstraintsSelection from "~/components/ConstraintsSelection.vue";
-import RequestResume from "~/components/RequestResume.vue";
 import {Steps} from "~/enums/steps.enum";
+import Result from "~/components/Result.vue";
 
 const step = ref<Steps>(Steps.photo)
 const availableSteps = ref<Steps[]>([Steps.photo])
 const selectedFile = ref<File | null>(null)
 const style = ref('')
-const constraints = ref('')
+const constraints = ref<string[]>([])
 const generatedImage = ref<string | null>(null)
 const isLoading = ref(false)
 
@@ -33,7 +33,7 @@ const startProcess = async () => {
   const formData = new FormData()
   formData.append('image', selectedFile.value)
   formData.append('style', style.value)
-  formData.append('constraints', constraints.value)
+  formData.append('constraints', constraints.value.join(', '))
 
   const response = await fetch('/api/generate-image', {
     method: 'POST',
@@ -56,6 +56,7 @@ const startProcess = async () => {
     </header>
 
     <FormStepper
+        v-if="step !== Steps.result"
         :step="step"
         :available-steps="availableSteps"
         @setStep="(newStep: number) => step = newStep"
@@ -78,36 +79,13 @@ const startProcess = async () => {
     <ConstraintsSelection
         v-if="step === Steps.constraints"
         v-model="constraints"
-        @nextStep="nextStep"
+        @nextStep="startProcess"
     />
 
-    <RequestResume
-        v-if="step === Steps.resume"
-        :style="style"
-        :previewUrl="previewUrl"
-        :isLoading="isLoading"
-        @startProcess="startProcess"
+    <Result
+      v-if="step === Steps.result && previewUrl"
+      :uploaded-image="previewUrl"
+      :generated-image="generatedImage"
     />
-
-    <div v-if="step === Steps.result" class="w-full flex justify-center mt-6 relative">
-      <img
-          v-if="previewUrl && !generatedImage"
-          :src="previewUrl"
-          alt="Uploaded image"
-          class="w-full rounded-xl shadow-lg transition duration-300"
-          style="filter: blur(8px);"
-      />
-
-      <div v-if="isLoading" class="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-50 rounded-xl">
-        <div class="w-16 h-16 border-4 border-t-4 border-gray-600 border-solid rounded-full animate-spin"></div>
-      </div>
-
-      <img
-          v-if="generatedImage && !isLoading"
-          :src="generatedImage"
-          alt="Generated design"
-          class="w-full rounded-xl shadow-lg"
-      />
-    </div>
   </div>
 </template>
