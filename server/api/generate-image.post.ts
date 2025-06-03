@@ -18,19 +18,27 @@ export default defineEventHandler(async (event) => {
     prompt += ` Please incorporate the following specific requirements: ${constraints}.`;
   }
 
-  const response = await client.images.edit({
-    model: "gpt-image-1",
-    image: [image],
-    prompt,
-  });
+  try {
+    const response = await client.images.edit({
+      model: "gpt-image-1",
+      image: [image],
+      prompt,
+    });
 
-  if (!response.data || response.data.length === 0) {
+    if (!response.data || response.data.length === 0) {
+      return {
+        error: 'No image generated'
+      };
+    }
+
     return {
-      error: 'No image generated'
+      imageBase64: response.data[0].b64_json
+    };
+  } catch (error) {
+    console.error('OpenAI API error:', error);
+    return {
+      error: 'Failed to generate image. The OpenAI API is currently unavailable.',
+      apiError: true
     };
   }
-
-  return {
-    imageBase64: response.data[0].b64_json
-  };
 });

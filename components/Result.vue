@@ -12,11 +12,6 @@ defineProps<{
         alt="Generated design"
         class="w-full h-auto rounded-xl"
     />
-    <a :href="generatedImage" download="generated-image.jpg" class="self-end">
-      <action-button color="blue">
-        Download
-      </action-button>
-    </a>
   </div>
 
   <div v-else class="relative w-full flex justify-center mt-6">
